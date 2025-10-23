@@ -11,6 +11,8 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 import static uz.pdp.Utils.AppUtils.intScanner;
 import static uz.pdp.Utils.AppUtils.strScanner;
@@ -27,15 +29,50 @@ public class BookService {
                 case 4 -> updateBook();
                 case 5 -> deleteBook();
                 case 6 -> authorNameIsBook();
-                case 7 -> {
-                    break w;
-                }
+                case 7 -> {break w;}
                 default -> System.out.println("Invalid Input");
             }
         }
     }
 
-    private static void authorNameIsBook() {
+    private static void authorNameIsBook() throws URISyntaxException, IOException, InterruptedException {
+        System.out.print("Enter Author Name: ");
+        String authorName = strScanner.nextLine();
+
+        String url = "http://localhost:5050/api/books";
+
+        HttpClient httpClient = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_2)
+                .build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI(url))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        String body = response.body();
+
+        Gson gson = new GsonBuilder().create();
+        Book[] books = gson.fromJson(body, Book[].class);
+
+
+        List<Book> filteredBooks = new ArrayList<>();
+        for (Book book : books) {
+            if (book.getAuthor() != null && book.getAuthor().getName().equals(authorName)) {
+                filteredBooks.add(book);
+            }
+        }
+
+        if (filteredBooks.isEmpty()) {
+            System.out.println("Bu authorni kitobi topilmadi!");
+        } else {
+            System.out.println(filteredBooks);
+        }
+
+        System.out.println("-------------------------");
     }
 
     private static void deleteBook() throws URISyntaxException, IOException, InterruptedException {

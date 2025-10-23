@@ -10,7 +10,6 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 import static uz.pdp.Utils.AppUtils.intScanner;
@@ -28,9 +27,7 @@ public class AuthorService {
                 case 4 -> updateAuthor();
                 case 5 -> deleteAuthor();
                 case 6 -> authorByCountry();
-                case 7 -> {
-                    break w;
-                }
+                case 7 -> {break w;}
                 default -> System.out.println("Invalid Input");
             }
         }
@@ -70,7 +67,6 @@ public class AuthorService {
         }
         System.out.println("-------------------------");
     }
-
 
     private static void deleteAuthor() throws IOException, InterruptedException, URISyntaxException {
         System.out.print("Enter Author ID: ");
